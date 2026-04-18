@@ -76,14 +76,15 @@ function graphColoring(v):
 
 💻 Java Program
 
-public class CellTowerColoring {
+public class GraphColoring {
 
-    static int V = 40; // Number of towers
-    static int m = 4;  // Number of frequencies (colors)
+    static final int V = 40; // Number of towers
+    static final int m = 4;  // Number of frequencies
 
     static int[][] graph = new int[V][V];
     static int[] color = new int[V];
 
+    // Check if it's safe to assign color c to vertex v
     static boolean isSafe(int v, int c) {
         for (int i = 0; i < V; i++) {
             if (graph[v][i] == 1 && color[i] == c)
@@ -92,6 +93,7 @@ public class CellTowerColoring {
         return true;
     }
 
+    // Backtracking function
     static boolean graphColoring(int v) {
         if (v == V)
             return true;
@@ -109,32 +111,43 @@ public class CellTowerColoring {
         return false;
     }
 
+    // Print result
     static void printSolution() {
-        System.out.println("Tower : Frequency");
+        System.out.println("\nTower : Frequency");
         for (int i = 0; i < V; i++) {
-            System.out.println("Tower " + i + " -> " + color[i]);
+            System.out.println("Tower " + i + " -> Frequency " + color[i]);
+        }
+    }
+
+    // Generate a connected graph (ensures solution exists more often)
+    static void generateGraph() {
+        // Create a simple chain to ensure connectivity
+        for (int i = 0; i < V - 1; i++) {
+            graph[i][i + 1] = 1;
+            graph[i + 1][i] = 1;
+        }
+
+        // Add some extra edges randomly
+        for (int i = 0; i < V; i++) {
+            for (int j = i + 2; j < V; j++) {
+                if (Math.random() < 0.15) {
+                    graph[i][j] = graph[j][i] = 1;
+                }
+            }
         }
     }
 
     public static void main(String[] args) {
 
-        // Example: connect towers randomly (simulate <5 km)
-        for (int i = 0; i < V; i++) {
-            for (int j = i + 1; j < V; j++) {
-                if (Math.random() < 0.2) {
-                    graph[i][j] = graph[j][i] = 1;
-                }
-            }
-        }
+        generateGraph(); // build graph
 
         if (graphColoring(0)) {
             printSolution();
         } else {
-            System.out.println("Solution does not exist");
+            System.out.println("Solution does not exist with " + m + " frequencies.");
         }
     }
 }
-
 
 ---
 
